@@ -1,0 +1,22 @@
+{
+  "name": "wechatlearn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "check.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ngrok": "cross-env ./bin/sunny.exe clientid 2b101eb6e1fec9ea",
+    "start": "nodemon check"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "raw-body": "^2.3.3",
+    "sha1": "^1.1.1",
+    "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  }
+}
