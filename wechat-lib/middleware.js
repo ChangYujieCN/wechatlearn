@@ -1,7 +1,6 @@
 const sha1 = require("sha1");
 const getRawBody = require("raw-body");
 const tool = require("./tool");
-const reply = require("./../wechat/reply");
 module.exports = (config,reply) => {
   return async (ctx, next) => {
     let {
@@ -52,7 +51,6 @@ module.exports = (config,reply) => {
       //   }
 
       ctx.weixin = message;
-      console.log("ds",ctx.weixin)
       await reply.apply(ctx, [ctx, next]);
       let replyBody = ctx.body;
       let msg = ctx.weixin;

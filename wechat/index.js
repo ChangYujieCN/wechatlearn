@@ -17,11 +17,11 @@ const wechatCfg = {
     }
   }
 };
-exports.test = async () => {
-  const client = new Wechat(wechatCfg.wechat);
-  let data = await client.fetchAccessToken();
-  await client.saveAccessToken(data);
-  console.log("data in db");
-  console.log(data);
+exports.getWechat = () => {
+  return new Wechat(wechatCfg.wechat);
+  // let data = await client.fetchAccessToken();
+  // await client.saveAccessToken(data);
+  // console.log("data in db");
+  // console.log(data);
 };
 

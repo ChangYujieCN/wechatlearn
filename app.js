@@ -7,9 +7,7 @@ const {reply} = require("./wechat/reply");
 (async () => {
   await connect(config.dbUrl);
   initSchema();
-  const {test} = require("./wechat");
   // initAdmin();
-  await test();
   const app = new Koa();
   app.use(wechat(config.wechat, reply.reply));
   app.listen(config.port);
