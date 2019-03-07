@@ -4,12 +4,12 @@ const tpl = `
   <ToUserName><![CDATA[<%= toUserName %>]]></ToUserName>
   <FromUserName><![CDATA[<%= fromUserName %>]]></FromUserName>
   <CreateTime><%= Date.now() %></CreateTime>
+  <MsgType><![CDATA[<%= msgType %>]]></MsgType>
   <% if(msgType === "text") { %>
-    <MsgType><![CDATA[text]]></MsgType>
     <Content><![CDATA[<%- content %>]]></Content>
   <% } else if (msgType === "image") { %>
     <Image>
-      <MediaId><![CDATA[content.media_id]]></MediaId>
+      <MediaId><![CDATA[<%= content.mediaId %>]]></MediaId>
     </Image>
   <% } else if (msgType === "voice") { %>
       <Voice>
@@ -17,9 +17,9 @@ const tpl = `
        </Voice>
   <% } else if (msgType === "video") { %>
     <Video>
-      <MediaId><![CDATA[content.media_id]]></MediaId>
-      <Title><![CDATA[content.title]]></Title>
-      <Description><![CDATA[content.description]]></Description>
+      <MediaId><![CDATA[<%= content.mediaId %>]]></MediaId>
+      <Title><![CDATA[<%= content.title %>]]></Title>
+      <Description><![CDATA[<%= content.description %>]]></Description>
     </Video>     
   <% } else if (msgType === "music") { %>
     <Music>

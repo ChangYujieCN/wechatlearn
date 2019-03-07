@@ -1,7 +1,7 @@
 const sha1 = require("sha1");
 const getRawBody = require("raw-body");
 const tool = require("./tool");
-module.exports = (config,reply) => {
+module.exports = (config, reply) => {
   return async (ctx, next) => {
     let {
       signature,
@@ -55,6 +55,7 @@ module.exports = (config,reply) => {
       let replyBody = ctx.body;
       let msg = ctx.weixin;
       let xml = tool.tpl(replyBody, msg);
+      console.log(xml);
       ctx.status = 200;
       ctx.type = "application/xml";
       ctx.body = xml;

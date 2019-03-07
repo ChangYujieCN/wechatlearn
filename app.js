@@ -9,8 +9,7 @@ const {reply} = require("./wechat/reply");
   initSchema();
   // initAdmin();
   const app = new Koa();
-  app.use(wechat(config.wechat, reply.reply));
+  app.use(wechat(config.wechat, reply));
   app.listen(config.port);
   console.log(`Listening ${config.port}`);
 })();
-

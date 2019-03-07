@@ -73,8 +73,8 @@ class WeChat {
 
   async handle(operation, ...args) {
     let tokenData = await this.fetchAccessToken();
-    let options = this[operation](tokenData.access_token, ...args);
-    let data = await WeChat.request(options);
+    let options = WeChat[operation](tokenData.access_token, ...args);
+    return await WeChat.request(options);
   }
 }
 
