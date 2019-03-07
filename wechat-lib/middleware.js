@@ -1,7 +1,8 @@
 const sha1 = require("sha1");
 const getRawBody = require("raw-body");
 const tool = require("./tool");
-module.exports = config => {
+const reply = require("./../wechat/reply");
+module.exports = (config,reply) => {
   return async (ctx, next) => {
     let {
       signature,
@@ -49,15 +50,23 @@ module.exports = config => {
       //     Content: '。',
       //     MsgId: '22207605671471755'
       //   }
+
+      ctx.weixin = message;
+      console.log("ds",ctx.weixin)
+      await reply.apply(ctx, [ctx, next]);
+      let replyBody = ctx.body;
+      let msg = ctx.weixin;
+      let xml = tool.tpl(replyBody, msg);
       ctx.status = 200;
       ctx.type = "application/xml";
-      ctx.body = `<xml>
-                    <ToUserName><![CDATA[${message.FromUserName}]]></ToUserName>
-                    <FromUserName><![CDATA[${message.ToUserName}]]></FromUserName>
-                    <CreateTime>${Date.now()}</CreateTime>
-                    <MsgType><![CDATA[text]]></MsgType> 
-                    <Content><![CDATA[${message.Content}]]></Content>
-                  </xml>`
+      ctx.body = xml;
+      // ctx.body = `<xml>
+      //               <ToUserName><![CDATA[${message.FromUserName}]]></ToUserName>
+      //               <FromUserName><![CDATA[${message.ToUserName}]]></FromUserName>
+      //               <CreateTime>${Date.now()}</CreateTime>
+      //               <MsgType><![CDATA[text]]></MsgType>
+      //               <Content><![CDATA[${message.Content}]]></Content>
+      //             </xml>`
     }
   }
 };

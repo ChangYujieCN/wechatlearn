@@ -2,17 +2,22 @@
   "name": "wechatlearn",
   "version": "1.0.0",
   "description": "",
-  "main": "check.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ngrok": "cross-env ./bin/sunny.exe clientid 2b101eb6e1fec9ea",
-    "start": "nodemon check"
+    "ngrok": "cross-env ./bin/sunny.exe clientid 160051110458",
+    "start": "cross-env NODE_ENV=development nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^2.6.1",
+    "glob": "^7.1.3",
     "koa": "^2.7.0",
+    "mongoose": "^5.4.17",
     "raw-body": "^2.3.3",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
     "sha1": "^1.1.1",
     "xml2js": "^0.4.19"
   },

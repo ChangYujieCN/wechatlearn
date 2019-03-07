@@ -1,4 +1,5 @@
 const xml2js = require("xml2js");
+const template = require("./tpl");
 const parseXML = xml => {
   return new Promise((resolve, reject) => {
     xml2js.parseString(xml, {trim: true}, (err, content) => {
@@ -47,5 +48,28 @@ const formatMessage = result => {
   }
   return message;
 };
+const tpl = (content, message) => {
+  let type = "text";
+  if (Array.isArray(content)) {
+    type = "news";
+  }
+  if (!content) content = "Empty News";
+  if (content && content.type) {
+    //非图文 非纯文本
+    //视频或者语音
+    type = content.type;
+  }
+  let info = Object.assign({}, {
+    content,
+    msgType: type,
+    createTime: Date.now(),
+    toUserName: message.FromUserName,
+    fromUserName: message.ToUserName
+  });
+  return template(info);
+};
+
+
 module.exports.formatMessage = formatMessage;
 module.exports.parseXML = parseXML;
+module.exports.tpl = tpl;
