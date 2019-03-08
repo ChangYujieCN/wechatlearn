@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ngrok": "cross-env ./bin/sunny.exe clientid 160051110458",
+    "ngrok": "start chrome https://www.ngrok.cc/user.html && start chrome https://mp.weixin.qq.com/wiki?t=resource/res_main && cross-env ./bin/sunny.exe clientid 160051110458",
     "start": "cross-env NODE_ENV=development nodemon app.js"
   },
   "author": "",
