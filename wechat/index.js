@@ -19,9 +19,5 @@ const wechatCfg = {
 };
 exports.getWechat = () => {
   return new Wechat(wechatCfg.wechat);
-  // let data = await client.fetchAccessToken();
-  // await client.saveAccessToken(data);
-  // console.log("data in db");
-  // console.log(data);
 };
 

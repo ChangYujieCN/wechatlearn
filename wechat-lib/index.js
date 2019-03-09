@@ -5,7 +5,8 @@ const api = {
   accessToken: base + "token?grant_type=client_credential",
   //临时素材上传
   temporary: {
-    upload: base + "media/upload?"
+    upload: base + "media/upload?",
+    fetch: base + "media/get?",
   },
   // https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE
   //永久素材上传
@@ -29,8 +30,6 @@ class WeChat {
     this.appSecret = opts.appSecret;
     this.getAccessToken = opts.getAccessToken;
     this.saveAccessToken = opts.saveAccessToken;
-    this.isValidToken = this.isValidToken.bind(this);
-    // this.fetchAccessToken();
   }
 
   async request(options) {
@@ -119,15 +118,26 @@ class WeChat {
 
   fetchMaterial(token, mediaId, type, permanent) {
     let form = {};
-    let fetchUrl = api.permanent.fetch;
+    let fetchUrl = api.temporary.fetch;
+    if (permanent) {
+      fetchUrl = api.permanent.fetch;
+    }
     let url = fetchUrl + "access_token=" + token;
     let options = {
       method: "POST",
-      url
+      url,
     };
-    form.media_id = mediaId;
-    form.access_token = token;
-    options.body = form;
+    if (permanent) {
+      form.media_id = mediaId;
+      form.access_token = token;
+      options.body = form;
+    } else {
+      if (type === "video") {
+        //请注意，视频文件不支持https下载，调用该接口需http协议。
+        options.url = options.url.replace("https:", "http:");
+      }
+      options.url = options.url + "&media_id=" + mediaId;
+    }
     return options;
   };
 

@@ -83,7 +83,6 @@ exports.reply = async (ctx, next) => {
           resolve(__dirname, "../2.jpg"),
           {type: "image"}
         );
-        console.log(data2);
         let media = {
           articles: [
             {
@@ -109,6 +108,7 @@ exports.reply = async (ctx, next) => {
               only_fans_can_comment: 1
             },
             //若新增的是多图文素材，则此处应还有几段articles结构
+            //微信更新后貌似只能被动回复一条数据
           ]
         };
         let uploadData = await client.handle(
@@ -117,8 +117,46 @@ exports.reply = async (ctx, next) => {
           media,
           {}
         );
-        console.log(uploadData);
-        reply = "上传成功";
+        let newMedia = {
+          index: 0,
+          media_id: uploadData.media_id,
+          articles: {
+            title: "这是服务端上传的图文1",
+            thumb_media_id: data.media_id,
+            author: "Chang",
+            digest: "这就是摘要",
+            show_cover_pic: 1,
+            content: "点击去往百度",
+            content_source_url: "https://www.baidu.com/",
+            need_open_comment: 1,
+            only_fans_can_comment: 1
+          }
+        };
+        let mediaData = await client.handle(
+          "updateMaterial",
+          uploadData.media_id,
+          newMedia
+        );
+        console.log(mediaData);
+        let newsData = await client.handle(
+          "fetchMaterial",
+          uploadData.media_id,
+          "news",
+          true
+        );
+        let items = newsData.news_item;
+        let news = [];
+        items.forEach(item => {
+          news.push({
+            title: item.title,
+            description: item.description,
+            picUrl: data2.url,
+            url: item.url
+          });
+        });
+        console.log()
+        // console.log(uploadData);
+        reply = news;
         break;
       }
       case "10": {
