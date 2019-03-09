@@ -19,6 +19,16 @@ const api = {
     count: base + "material/get_materialcount?",//获取素材总数
     del: base + "material/del_material?",//删除永久素材
     update: base + "material/update_news?",//修改永久图文素材
+  },
+  tag: {
+    create: base + "tags/create?",
+    fetch: base + "tags/get?",
+    update: base + "tags/update?",
+    del: base + "tags/delete?",
+    fetchUsers: base + "user/tag/get?",
+    batchTag: base + "tags/members/batchtagging?",
+    batchUntag: base + "tags/members/batchuntagging?",
+    getUserTags: base + "tags/getidlist?",
   }
 };
 
@@ -184,6 +194,105 @@ class WeChat {
       url,
       body: options
     }
+  }
+
+  createTag(token, name) {
+    let body = {
+      tag: {
+        name
+      }
+    };
+    let url = api.tag.create + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  fetchTags(token) {
+    let url = `${api.tag.fetch}access_token=${token}`;
+    return {url};
+  }
+
+  updateTag(token, id, name) {
+    let body = {
+      tag: {
+        id,
+        name
+      }
+    };
+    let url = api.tag.update + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  delTag(token, id) {
+    let body = {
+      tag: {
+        id
+      }
+    };
+    let url = api.tag.del + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  fetchTagUsers(token, id, openId) {
+    let body = {
+        tagid: id,
+        next_openid: openId || ""
+    };
+    let url = api.tag.fetchUsers + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  batchTag(token, openidList, id) {
+    let body = {
+      openid_list: openidList,
+      tagid: id
+    };
+    let url = api.tag.batchTag + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  batchUntag(token, openidList, id) {
+    let body = {
+        openid_list: openidList,
+        tagid: id
+    };
+    let url = api.tag.batchUntag + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
+  }
+
+  getUserTags(token, openId) {
+    let body = {
+        openid: openId,
+    };
+    let url = api.tag.getUserTags + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body
+    };
   }
 }
 

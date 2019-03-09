@@ -154,14 +154,11 @@ exports.reply = async (ctx, next) => {
             url: item.url
           });
         });
-        console.log()
-        // console.log(uploadData);
         reply = news;
         break;
       }
-      case "10": {
+      case "8": {
         let counts = await client.handle("countMaterial");
-        console.log(JSON.stringify(counts));
         let res = await Promise.all([
           client.handle("batchMaterial", {
             type: "image",
@@ -191,6 +188,20 @@ exports.reply = async (ctx, next) => {
           voice: ${res[2].total_count}
           news: ${res[3].total_count}
         `;
+        break;
+      }
+      case "9": {
+        //标签的测试 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140837
+        // let newTag = await client.handle("createTag","new")
+        // await client.handle("delTag",100);
+        // await client.handle("updateTag",101,"newnewTag");
+        // let batchData = await client.handle("batchTag", [message.FromUserName], 2);
+        await client.handle("batchUntag", [message.FromUserName], 2);
+        let userList = await client.handle("fetchTagUsers", 2);
+        let userList2 = await client.handle("fetchTagUsers", 101);
+        let data = await client.handle("fetchTags");
+        // let userTags = await client.handle("getUserTags", message.FromUserName);
+        reply = data.tags.length;
         break;
       }
       default:
