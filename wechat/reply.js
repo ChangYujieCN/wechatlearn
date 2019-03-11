@@ -204,6 +204,44 @@ exports.reply = async (ctx, next) => {
         reply = data.tags.length;
         break;
       }
+      case "10": {
+        let data = await client.handle("getUserList");
+        console.log(data);
+        reply = data.total + "个关注者";
+        break;
+      }
+      case "11": {
+        let data = await client.handle("remarkUser", message.FromUserName, "Roger");
+        if (data.errcode === 0) {
+          reply = "备注成功";
+        } else {
+          reply = "备注失败";
+        }
+        break;
+      }
+      case "12": {
+        let UserData = await client.handle("getUserInfo", message.FromUserName);
+        if (UserData && UserData.openid) {
+          reply = JSON.stringify(UserData);
+        }
+        break;
+      }
+      //测试批量获取用户数据
+      case "13": {
+        let data = await client.handle(
+          "batchGetUserInfo",
+          [
+            {
+              openid: message.FromUserName,
+              lang: "zh_CN"
+            },
+          ]
+        );
+        if (data && data.user_info_list.length > 0) {
+          reply = JSON.stringify(data);
+        }
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
@@ -211,6 +249,13 @@ exports.reply = async (ctx, next) => {
     ctx.body = reply;
   }
   //middleware里流程并未走完  需要next()
+    //测试定位功能 注意只有公众号可用
+  else if (message.MsgType === "event") {
+    if (message.Event === "LOCATION") {
+       reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+    }
+    ctx.body = reply;
+  }
   await next();
 };
 

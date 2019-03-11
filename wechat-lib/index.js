@@ -29,7 +29,13 @@ const api = {
     batchTag: base + "tags/members/batchtagging?",
     batchUntag: base + "tags/members/batchuntagging?",
     getUserTags: base + "tags/getidlist?",
-  }
+  },
+  user: {
+    fetch: base + "user/get?",
+    remark: base + "user/info/updateremark?",
+    info: base + "user/info?",
+    batch: `${base}user/info/batchget?`,
+  },
 };
 
 
@@ -246,8 +252,8 @@ class WeChat {
 
   fetchTagUsers(token, id, openId) {
     let body = {
-        tagid: id,
-        next_openid: openId || ""
+      tagid: id,
+      next_openid: openId || ""
     };
     let url = api.tag.fetchUsers + "access_token=" + token;
     return {
@@ -272,8 +278,8 @@ class WeChat {
 
   batchUntag(token, openidList, id) {
     let body = {
-        openid_list: openidList,
-        tagid: id
+      openid_list: openidList,
+      tagid: id
     };
     let url = api.tag.batchUntag + "access_token=" + token;
     return {
@@ -285,7 +291,7 @@ class WeChat {
 
   getUserTags(token, openId) {
     let body = {
-        openid: openId,
+      openid: openId,
     };
     let url = api.tag.getUserTags + "access_token=" + token;
     return {
@@ -293,6 +299,45 @@ class WeChat {
       url,
       body
     };
+  }
+
+  getUserList(token, openId) {
+    let url = api.user.fetch + "access_token=" + token + "&next_openid=" + (openId || "");
+    return {
+      url,
+    };
+  }
+
+  //注意  订阅号不支持
+  remarkUser(token, openId, remark) {
+    let body = {
+      openid: openId,
+      remark
+    };
+    let url = api.user.remark + "access_token=" + token;
+    return {
+      method: "POST",
+      url,
+      body,
+    };
+  }
+
+  getUserInfo(token, openId, lang = "zh_CN") {
+    let url = api.user.info + "access_token=" + token + "&openid=" + openId + "&lang=" + lang;
+    return {url};
+  }
+
+  //批量获取用户信息
+  batchGetUserInfo(token, openIdList) {
+    let body = {
+      user_list: openIdList
+    };
+    let url = `${api.user.batch}access_token=${token}`;
+    return {
+      method: "POST",
+      url,
+      body,
+    }
   }
 }
 
