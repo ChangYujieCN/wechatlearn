@@ -1,6 +1,7 @@
 const fs = require("fs");
-const request = require("request-promise-native");
+const request_native = require("request-promise-native");
 const base = "https://api.weixin.qq.com/cgi-bin/";
+const mpBase = "https://mp.weixin.qq.com/cgi-bin/";
 const api = {
   accessToken: base + "token?grant_type=client_credential",
   //临时素材上传
@@ -36,6 +37,13 @@ const api = {
     info: base + "user/info?",
     batch: `${base}user/info/batchget?`,
   },
+  qrcode: {
+    create: `${base}qrcode/create?`,
+    show: `${mpBase}showqrcode?`
+  },
+  shortUrl: {
+    create: base + "shorturl?"
+  }
 };
 
 
@@ -49,9 +57,9 @@ class WeChat {
   }
 
   async request(options) {
-    options = Object.assign({}, options, {json: true});
+    options = {...options, json: true};
     try {
-      return await request(options);
+      return await request_native(options);
     } catch (e) {
       throw new Error(e);
     }
@@ -333,6 +341,36 @@ class WeChat {
       user_list: openIdList
     };
     let url = `${api.user.batch}access_token=${token}`;
+    return {
+      method: "POST",
+      url,
+      body,
+    }
+  }
+
+  //创建二维码ticket
+  createQRCodeTicket(token, qr) {
+    let url = `${api.qrcode.create}access_token=${token}`;
+    return {
+      method: "POST",
+      url,
+      body: qr,
+    }
+  }
+
+  //通过ticket换取二维码
+  showQRCode(ticket) {
+    return api.qrcode.show + "ticket=" + encodeURI(ticket);
+  }
+
+  //长连接转短链接
+
+  createShortUrl(token, longUrl) {
+    let body = {
+      action: "long2short",
+      long_url: longUrl
+    };
+    let url = `${api.shortUrl.create}access_token=${token}`;
     return {
       method: "POST",
       url,

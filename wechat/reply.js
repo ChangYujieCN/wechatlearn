@@ -242,6 +242,28 @@ exports.reply = async (ctx, next) => {
         }
         break;
       }
+      case "14": {
+        let tempQRData = {
+          "expire_seconds": 604800,
+          "action_name": "QR_SCENE",
+          "action_info": {"scene": {"scene_id": 123}}
+        };
+        let ticketData = await client.handle("createQRCodeTicket", tempQRData);
+        let tempQRCodeUrl = client.showQRCode(ticketData.ticket);
+        console.log(tempQRCodeUrl);
+        reply = "二维码URL: " + tempQRCodeUrl;
+        break;
+      }
+      case "15": {
+        let longUrl = "https://coding.imooc.com/class/321.html?mc_marking=2930925e59b139366b87988853e7a0c4&mc_channel=banner";
+        let data = await client.handle("createShortUrl", longUrl);
+        if (data.errcode === 0) {
+          reply = data.short_url;
+        } else {
+          reply = "获取短链接失败"
+        }
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
@@ -249,10 +271,10 @@ exports.reply = async (ctx, next) => {
     ctx.body = reply;
   }
   //middleware里流程并未走完  需要next()
-    //测试定位功能 注意只有公众号可用
+  //测试定位功能 注意只有公众号可用
   else if (message.MsgType === "event") {
     if (message.Event === "LOCATION") {
-       reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+      reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
     }
     ctx.body = reply;
   }
