@@ -264,6 +264,28 @@ exports.reply = async (ctx, next) => {
         }
         break;
       }
+      case "16": {
+        let semanticData = {
+          query: "查一下明天从北京到上海的南航机票",
+          city: "北京",
+          category: "flight,hotel",
+          appid: "wxaaaaaaaaaaaaaaaa",
+          uid: message.FromUserName
+        };
+        let searchData = await client.handle("semantic", semanticData);
+        if (searchData.errcode === 0) {
+          reply = JSON.stringify(searchData);
+        } else {
+          reply = "语义理解失败"
+        }
+        break;
+      }
+      case "17": {
+        let content = "翻译一下这句话";
+        let data = await client.handle("aiTranslate", content, "zh_CN", "en_US");
+        reply = `原文本:${data.from_content},翻译后文本:${data.to_content}`;
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
