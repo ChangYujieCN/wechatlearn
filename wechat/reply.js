@@ -286,6 +286,54 @@ exports.reply = async (ctx, next) => {
         reply = `原文本:${data.from_content},翻译后文本:${data.to_content}`;
         break;
       }
+      case "18": {
+        let menu = {
+          button: [
+            {
+              name: "一级菜单",
+              sub_button: [
+                {
+                  name: "二级菜单 1",
+                  type: "click",
+                  key: "no_1",
+                },
+                {
+                  name: "二级菜单 2",
+                  type: "click",
+                  key: "no_2",
+                },
+                {
+                  name: "二级菜单 3",
+                  type: "click",
+                  key: "no_3",
+                }
+              ]
+            },
+            {
+              name: "分类",
+              type: "view",
+              url: "https://www.imooc.com"
+            },
+            {
+              name: "新菜单" + Math.random(),
+              type: "click",
+              key: "new_111"
+            },
+          ]
+        };
+        let data = await client.handle("createMenu", menu);
+        if (data.errcode === 0) {
+          reply = "菜单创建成功,请等待5分钟,或者取消关注并重新关注";
+        }
+        break;
+      }
+      case "19": {
+        let data = await client.handle("deleteMenu");
+        if (data.errcode === 0) {
+          reply = "菜单删除成功,请等待5分钟,或者取消关注并重新关注";
+        }
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
@@ -295,6 +343,7 @@ exports.reply = async (ctx, next) => {
   //middleware里流程并未走完  需要next()
   //测试定位功能 注意只有公众号可用
   else if (message.MsgType === "event") {
+    let reply = "";
     if (message.Event === "LOCATION") {
       reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
     }
