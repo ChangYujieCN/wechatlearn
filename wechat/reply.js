@@ -334,6 +334,67 @@ exports.reply = async (ctx, next) => {
         }
         break;
       }
+      case "20": {
+        let menu = {
+          button: [
+            {
+              name: "发图扫码",
+              sub_button: [
+                {
+                  name: "系统拍照",
+                  type: "pic_sysphoto",
+                  key: "no_1",
+                },
+                {
+                  name: "拍照或者发图",
+                  type: "pic_photo_or_album",
+                  key: "no_2",
+                },
+                {
+                  name: "微信相册发图",
+                  type: "pic_weixin",
+                  key: "no_3",
+                },
+                {
+                  name: "扫码",
+                  type: "scancode_push",
+                  key: "no_3",
+                },
+                {
+                  name: "等待中扫码",
+                  type: "scancode_waitmsg",
+                  key: "no_3",
+                },
+              ]
+            },
+            {
+              name: "跳新连接",
+              type: "view",
+              url: "https://www.imooc.com"
+            },
+            {
+              name: "其他",
+              sub_button: [
+                {
+                  name: "系统拍照",
+                  type: "pic_sysphoto",
+                  key: "no_11",
+                },
+                {
+                  name: "地理位置",
+                  type: "location_select",
+                  key: "no_12",
+                },
+              ]
+            },
+          ]
+        };
+        let data = await client.handle("createMenu", menu);
+        if (data.errcode === 0) {
+          reply = "菜单创建成功,请等待5分钟,或者取消关注并重新关注";
+        }
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
@@ -344,8 +405,46 @@ exports.reply = async (ctx, next) => {
   //测试定位功能 注意只有公众号可用
   else if (message.MsgType === "event") {
     let reply = "";
-    if (message.Event === "LOCATION") {
-      reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+    switch (message.Event) {
+      case "LOCATION":
+        reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+        break;
+      case "CLICK":
+        reply = `你点击了菜单的: ${message.EventKey}`;
+        break;
+      case "VIEW":
+        reply = `你点击了菜单链接 ${message.EventKey} ${message.MenuId}`;
+        break;
+      case "scancode_push":
+        reply = `你扫码了: ${message.ScanCodeInfo} ${message.ScanCodeInfo.ScanResult}`;
+        break;
+      case "scancode_waitmsg":
+        reply = `你扫码了: ${message.ScanCodeInfo} ${message.ScanCodeInfo.ScanResult}`;
+        break;
+      case "pic_sysphoto":
+        reply = `系统拍照: ${message.SendPicsInfo.count} ${JSON.stringify(message.SendPicsInfo.PicList)}`;
+        break;
+      case "pic_photo_or_album":
+        reply = `拍照或者相册: ${message.SendPicsInfo.count} ${JSON.stringify(message.SendPicsInfo.PicList)}`;
+        break;
+      case "pic_wexin":
+        reply = `微信相册发图: ${message.SendPicsInfo.count} ${JSON.stringify(message.SendPicsInfo.PicList)}`;
+        break;
+      case "location_select":
+        console.log(message);
+        reply = `地理位置`;
+        break;
+      case "subscribe":
+        reply = `欢迎订阅`;
+        break;
+      case "unsubscribe":
+        reply = "取消订阅";
+        break;
+      case "SCAN":
+        reply = `关注后扫二维码 扫码参数:${message.EventKey} ${message.Ticket}`;
+        break;
+      case "image":
+        console.log(message.PicUrl);
     }
     ctx.body = reply;
   }
