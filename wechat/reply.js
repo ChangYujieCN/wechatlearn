@@ -395,6 +395,76 @@ exports.reply = async (ctx, next) => {
         }
         break;
       }
+      case "21": {
+        let menu = {
+          button: [
+            {
+              name: "Scan",
+              sub_button: [
+                {
+                  name: "系统拍照",
+                  type: "pic_sysphoto",
+                  key: "no_1",
+                },
+                {
+                  name: "拍照或者发图",
+                  type: "pic_photo_or_album",
+                  key: "no_2",
+                },
+                {
+                  name: "微信相册发图",
+                  type: "pic_weixin",
+                  key: "no_3",
+                },
+                {
+                  name: "扫码",
+                  type: "scancode_push",
+                  key: "no_3",
+                },
+                {
+                  name: "等待中扫码",
+                  type: "scancode_waitmsg",
+                  key: "no_3",
+                },
+              ]
+            },
+            {
+              name: "跳新连接",
+              type: "view",
+              url: "https://www.imooc.com"
+            },
+            {
+              name: "其他",
+              sub_button: [
+                {
+                  name: "系统拍照",
+                  type: "pic_sysphoto",
+                  key: "no_11",
+                },
+                {
+                  name: "地理位置",
+                  type: "location_select",
+                  key: "no_12",
+                },
+              ]
+            },
+          ]
+        };
+        let matchRule = {
+          // "tag_id": "2",
+          // "sex": "1",
+          // "country": "中国",
+          // "province": "广东",
+          // "city": "广州",
+          // "client_platform_type": "2",
+          "language": "en"
+        };
+        let data = await client.handle("customMenu", menu, matchRule);
+        let menuData = await client.handle("fetchMenu");
+
+        console.log(JSON.stringify(menuData));
+        break;
+      }
       default:
         reply = "听不太懂(⊙o⊙)？";
         break;
@@ -406,6 +476,8 @@ exports.reply = async (ctx, next) => {
   else if (message.MsgType === "event") {
     let reply = "";
     switch (message.Event) {
+      //有部分消息会收不到
+      //文档 自定义菜单>自定义菜单事件推送  消息管理>接受事件推送
       case "LOCATION":
         reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
         break;

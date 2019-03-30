@@ -54,6 +54,8 @@ const api = {
   menu: {
     create: base + "menu/create?",
     del: base + "menu/delete?",
+    custom: base + "menu/addconditional?",
+    fetch: base + "menu/get?"
   }
 };
 
@@ -420,6 +422,24 @@ class WeChat {
 
   deleteMenu(token) {
     let url = `${api.menu.del}access_token=${token}`;
+    return {
+      url,
+    }
+  }
+
+  //自定义菜单
+  customMenu(token, menu, matchRule) {
+    let url = `${api.menu.custom}access_token=${token}`;
+    menu.matchrule = matchRule;
+    return {
+      method: "POST",
+      url,
+      body: menu,
+    };
+  }
+
+  fetchMenu(token) {
+    let url = `${api.menu.fetch}access_token=${token}`;
     return {
       url,
     }
