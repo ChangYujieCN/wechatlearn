@@ -479,7 +479,7 @@ exports.reply = async (ctx, next) => {
       //有部分消息会收不到
       //文档 自定义菜单>自定义菜单事件推送  消息管理>接受事件推送
       case "LOCATION":
-        reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+        reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`;
         break;
       case "CLICK":
         reply = `你点击了菜单的: ${message.EventKey}`;
