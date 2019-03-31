@@ -407,7 +407,7 @@ exports.reply = async (ctx, next) => {
     let reply = "";
     switch (message.Event) {
       case "LOCATION":
-        reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`
+        reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`;
         break;
       case "CLICK":
         reply = `你点击了菜单的: ${message.EventKey}`;
