@@ -21,3 +21,9 @@ exports.userinfo = async (ctx, next) => {
   let data = await oauth.fetchAccessToken(code);
   ctx.body = await oauth.getUserInfo(data.access_token, data.openid);
 };
+exports.sdk = async (ctx, next) => {
+  await ctx.render("wechat/sdk", {
+    title: "SDK Test",
+    desc: "测试 SDK"
+  });
+};

@@ -1,5 +1,7 @@
 const Wechat = require("../app/controllers/wechat");
 module.exports = router => {
+  router.get("/sdk", Wechat.sdk);
+  //微信消息中间件
   router.get("/wx-hear", Wechat.hear);
   router.post("/wx-hear", Wechat.hear);
   //跳转到授权中间服务页面
