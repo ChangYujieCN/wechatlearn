@@ -5,7 +5,7 @@
 //5. 通过token+openid换取用户资料
 // 文档 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
 const base = "https://api.weixin.qq.com/sns/";
-const request = require("request-promise-native");
+const request_native = require("request-promise-native");
 const api = {
   authorize: "https://open.weixin.qq.com/connect/oauth2/authorize?",
   access_token: `${base}oauth2/access_token?`,
@@ -29,7 +29,7 @@ class WechatOauth {
 
   //详细信息/主动授权: snsapi_userinfo
   //基本信息/静默授权: snsapi_base
-  getAuthorizeUrl(scope = "snsapi_base", target, state) {
+  getAuthorizeUrl(scope = "snsapi_userinfo", target, state) {
     return `${api.authorize}appid=${this.appID}&redirect_uri=${encodeURIComponent(target)}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
   }
 

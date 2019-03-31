@@ -5,5 +5,6 @@ module.exports = {
     appsecret: "a1c7bf3bd5e7d4b9c71ad44e19d4ccf9",
     token: "tokenisjustatokenhehe"
   },
-  dbUrl: "mongodb://localhost:27017/wechat"
+  dbUrl: "mongodb://localhost:27017/wechat",
+  baseUrl:"http://learnwechatcyj.vipgz1.idcfengye.com"
 };
