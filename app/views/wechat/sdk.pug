@@ -1,20 +1,192 @@
 extends ../layout
 
 block content
-  h1 Wechat SDK Test
-  h2 #{desc}
-  //script.
-    // wx.config({
-    //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    //   appId: '', // 必填，公众号的唯一标识
-    //   timestamp:, // 必填，生成签名的时间戳
-    //   nonceStr: '', // 必填，生成签名的随机串
-    //   signature: '',// 必填，签名
-    //   jsApiList: [] // 必填，需要使用的JS接口列表
-    // });
-    // wx.ready(function () {
-    //   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-    // });
-    // wx.error(function (res) {
-    //   // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-    // });
+  #container.container(style="padding:15px;text-align:center")
+  h1 语音识别查电影
+  .weui-btn.weui-btn_primary 搜索
+  h2#title
+  #dierector
+  #year
+  #poster
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.js")
+  script(src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js")
+  script(src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js")
+  script.
+    wx.config({
+      debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: '#{appId}', // 必填，公众号的唯一标识
+      timestamp: '#{timestamp}', // 必填，生成签名的时间戳
+      nonceStr: '#{noncestr}', // 必填，生成签名的随机串
+      signature: '#{signature}',// 必填，签名
+      jsApiList: [
+        'updateAppMessageShareData',
+        'updateTimelineShareData',
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage',
+        'onMenuShareQQ',
+        'onMenuShareWeibo',
+        'onMenuShareQZone',
+        'startRecord',
+        'stopRecord',
+        'onVoiceRecordEnd',
+        'playVoice',
+        'pauseVoice',
+        'stopVoice',
+        'onVoicePlayEnd',
+        'uploadVoice',
+        'downloadVoice',
+        'chooseImage',
+        'previewImage',
+        'uploadImage',
+        'downloadImage',
+        'translateVoice',
+        'getNetworkType',
+        'openLocation',
+        'getLocation',
+        'hideOptionMenu',
+        'showOptionMenu',
+        'hideMenuItems',
+        'showMenuItems',
+        'hideAllNonBaseMenuItem',
+        'showAllNonBaseMenuItem',
+        'closeWindow',
+        'scanQRCode',
+        'chooseWXPay',
+        'openProductSpecificView',
+        'addCard',
+        'chooseCard',
+        'openCard'
+      ] // 必填，需要使用的JS接口列表
+    });
+    wx.ready(function () {
+      // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+      wx.checkJsApi({
+        jsApiList: [
+          'updateAppMessageShareData',
+          'updateTimelineShareData',
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
+          'onMenuShareQQ',
+          'onMenuShareWeibo',
+          'onMenuShareQZone',
+          'startRecord',
+          'stopRecord',
+          'onVoiceRecordEnd',
+          'playVoice',
+          'pauseVoice',
+          'stopVoice',
+          'onVoicePlayEnd',
+          'uploadVoice',
+          'downloadVoice',
+          'chooseImage',
+          'previewImage',
+          'uploadImage',
+          'downloadImage',
+          'translateVoice',
+          'getNetworkType',
+          'openLocation',
+          'getLocation',
+          'hideOptionMenu',
+          'showOptionMenu',
+          'hideMenuItems',
+          'showMenuItems',
+          'hideAllNonBaseMenuItem',
+          'showAllNonBaseMenuItem',
+          'closeWindow',
+          'scanQRCode',
+          'chooseWXPay',
+          'openProductSpecificView',
+          'addCard',
+          'chooseCard',
+          'openCard'
+        ],
+        success: function (res) {
+          console.log(res);
+        }
+      })
+      var shareContent = {
+        title: '嗖嗖嗖', // 分享标题
+        desc: "看我搜出来什么了",
+        link: 'learnwechatcyj.vipgz1.idcfengye.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: 'https://www.baidu.com/img/bd_logo1.png', // 分享图标
+        success: function () {
+          // 设置成功
+          window.alert("分享成功");
+        },
+        cancel: function () {
+          window.alert("分享失败");
+        }
+      };
+      var isRecording = false;
+      var doubanSlides;
+      $("#poster").on("click", function () {
+        wx.previewImage(doubanSlides);
+      });
+      wx.onMenuShareAppMessage(shareContent);
+
+      $(".weui-btn").on("click", function () {
+        if (!isRecording) {
+          isRecording = true;
+          $(".weui-btn").html("再点击停止录音并搜");
+          wx.startRecord({
+            success: function (res) {
+              var localId = res.localId;
+            },
+            cancel: function () {
+              window.alert("不能搜了")
+            }
+          })
+        }
+        isRecording = false;
+        $(".weui-btn").html("点击开始录音");
+        wx.stopRecord({
+          success: function (res) {
+            var localId = res.localId;
+            wx.translateVoice({
+              localId: localId, // 需要识别的音频的本地Id，由录音相关接口获得
+              isShowProgressTips: 1, // 默认为1，显示进度提示
+              success: function (res) {
+                var result = res.translateResult;
+                $.ajax({
+                  type: "get",
+                  url: "https://api.douban.com/v2/movie/search?q=" + result,
+                  dataType: "jsonp",
+                  success: function (data) {
+                    var subject = data.subjects[0];
+                    $("#title").html(subject.title);
+                    $("#year").html(subject.year);
+                    $("#director").html(subject.director);
+                    console.log(subject)
+                    shareContent = {
+                      title: subject.title,
+                      desc: subject.year + "上映",
+                      link: "https://www.imooc.com/",
+                      imgUrl: subject.images.large,
+                      success: function () {
+                        alert("分享成功");
+                      },
+                      cancel: function () {
+                        alert("分享失败");
+                      }
+                    };
+
+                    doubanSlides = {
+                      content: subject.images.large,
+                      urls: [subject.images.large]
+                    };
+
+                    data.subjects.forEach(function (item) {
+                      doubanSlides.urls.push(item.images.large);
+                    });
+                    wx.onMenuShareAppMessage(shareContent);
+                  }
+                })
+              }
+            });
+          }
+        })
+      })
+    });
+    wx.error(function (res) {
+      // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+    });

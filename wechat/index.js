@@ -3,6 +3,7 @@ const WechatOAuth = require("../wechat-lib/oauth");
 const config = require("../config");
 const mongoose = require("mongoose");
 const Token = mongoose.model("Token");
+const Ticket = mongoose.model("Ticket");
 
 const wechatCfg = {
   wechat: {
@@ -11,10 +12,16 @@ const wechatCfg = {
     token: config.wechat.token,
     getAccessToken: async () => {
       return await Token.getAccessToken();
-
     },
     saveAccessToken: async (data) => {
       return await Token.saveAccessToken(data);
+    },
+    getTicket: async () => {
+      return await Ticket.getTicket();
+
+    },
+    saveTicket: async (data) => {
+      return await Ticket.saveTicket(data);
     }
   }
 };

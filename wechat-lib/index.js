@@ -56,6 +56,9 @@ const api = {
     del: base + "menu/delete?",
     custom: base + "menu/addconditional?",
     fetch: base + "menu/get?"
+  },
+  ticket: {
+    get: `${base}ticket/getticket?`
   }
 };
 
@@ -67,6 +70,8 @@ class WeChat {
     this.appSecret = opts.appSecret;
     this.getAccessToken = opts.getAccessToken;
     this.saveAccessToken = opts.saveAccessToken;
+    this.getTicket = opts.getTicket;
+    this.saveTicket = opts.saveTicket;
   }
 
   async request(options) {
@@ -89,8 +94,24 @@ class WeChat {
     return data;
   }
 
+  async fetchTicket(token) {
+    let data = await this.getTicket();
+    if (!this.isValidToken(data)) {
+      data = await this.updateTicket(token);
+    }
+    await this.saveTicket(data);
+    return data;
+  }
+
   async updateAccessToken() {
     let url = `${api.accessToken}&appid=${this.appID}&secret=${this.appSecret}`;
+    let data = await this.request({url});
+    data.expires_in = Date.now() + (data.expires_in - 20) * 1000;
+    return data;
+  }
+
+  async updateTicket(token) {
+    let url = `${api.ticket.get}access_token=${token}&type=jsapi`;
     let data = await this.request({url});
     data.expires_in = Date.now() + (data.expires_in - 20) * 1000;
     return data;

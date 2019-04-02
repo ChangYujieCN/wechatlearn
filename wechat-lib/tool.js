@@ -1,5 +1,6 @@
 const xml2js = require("xml2js");
 const template = require("./tpl");
+const sha1 = require("sha1");
 const parseXML = xml => {
   return new Promise((resolve, reject) => {
     xml2js.parseString(xml, {trim: true}, (err, content) => {
@@ -68,8 +69,38 @@ const tpl = (content, message) => {
   });
   return template(info);
 };
-
-
+const signIt = (paramsObject) => {
+  let keys = Object.keys(paramsObject);
+  let newArgs = [], str = "";
+  keys = keys.sort();
+  keys.forEach(key => {
+    newArgs[key.toLowerCase()] = paramsObject[key];
+  });
+  for (let k in newArgs) {
+    str += "&" + k + "=" + newArgs[k];
+  }
+  return str.substr(1);
+};
+const shaIt = (noncestr, ticket, timestamp, url) => {
+  let ret = {
+    jsapi_ticket: ticket,
+    nonceStr: noncestr,
+    timestamp: timestamp,
+    url,
+  };
+  return sha1(signIt(ret));
+};
+const sign = (ticket, url) => {
+  let noncestr = Math.random().toString().substr(2, 16);
+  let timestamp = parseInt(Date.now() / 1000, 10).toString();
+  let signature = shaIt(noncestr, ticket, timestamp, url);
+  return {
+    noncestr,
+    timestamp,
+    signature,
+  }
+};
 module.exports.formatMessage = formatMessage;
 module.exports.parseXML = parseXML;
 module.exports.tpl = tpl;
+module.exports.sign = sign;
