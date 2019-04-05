@@ -25,7 +25,7 @@ ticketSchema.pre("save", function (next) {
 });
 ticketSchema.statics = {
   async getTicket() {
-    return await this.findOne({
+    return this.findOne({
       name: "ticket"
     });
   },

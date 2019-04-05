@@ -21,7 +21,7 @@ class WechatOauth {
   async request(options) {
     options = {...options, json: true};
     try {
-      return await request_native(options);
+      return request_native(options);
     } catch (e) {
       throw new Error(e);
     }
@@ -35,12 +35,12 @@ class WechatOauth {
 
   async fetchAccessToken(code) {
     let url = `${api.access_token}appid=${this.appID}&secret=${this.appSecret}&code=${code}&grant_type=authorization_code`;
-    return await this.request({url});
+    return this.request({url});
   }
 
   async getUserInfo(token, openID, lang = "zh_CN") {
     let url = `${api.userInfo}access_token=${token}&openid=${openID}&lang=${lang}`;
-    return await this.request({url});
+    return this.request({url});
   }
 }
 

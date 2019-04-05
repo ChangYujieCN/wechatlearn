@@ -77,7 +77,7 @@ class WeChat {
   async request(options) {
     options = {...options, json: true};
     try {
-      return await request_native(options);
+      return request_native(options);
     } catch (e) {
       throw new Error(e);
     }
@@ -171,7 +171,7 @@ class WeChat {
   async handle(operation, ...args) {
     let tokenData = await this.fetchAccessToken();
     let options = this[operation](tokenData.access_token, ...args);
-    return await this.request(options);
+    return this.request(options);
   }
 
   fetchMaterial(token, mediaId, type, permanent) {

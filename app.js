@@ -10,12 +10,12 @@ const config = require("./config");
 const {reply} = require("./wechat/reply");
 const views = require("koa-views");
 const mongoose = require("mongoose");
-const User = mongoose.model("User");
+
 
 (async () => {
   await connect(config.dbUrl);
   initSchema();
-  // initAdmin();
+  initAdmin();
   const app = new Koa();
   const router = new Router();
   app.use(views(resolve(__dirname + "/app/views"), {
@@ -30,6 +30,7 @@ const User = mongoose.model("User");
   app.use(async (ctx, next) => {
     let {user} = ctx.session;
     if (user && user._id) {
+      const User = mongoose.model("User");
       user = await User.findOne({_id});
       ctx.session.user = {
         _id: user._id,

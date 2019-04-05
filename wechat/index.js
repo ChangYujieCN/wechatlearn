@@ -11,17 +11,17 @@ const wechatCfg = {
     appSecret: config.wechat.appsecret,
     token: config.wechat.token,
     getAccessToken: async () => {
-      return await Token.getAccessToken();
+      return Token.getAccessToken();
     },
     saveAccessToken: async (data) => {
-      return await Token.saveAccessToken(data);
+      return Token.saveAccessToken(data);
     },
     getTicket: async () => {
-      return await Ticket.getTicket();
+      return Ticket.getTicket();
 
     },
     saveTicket: async (data) => {
-      return await Ticket.saveTicket(data);
+      return Ticket.saveTicket(data);
     }
   }
 };

@@ -9,22 +9,22 @@ exports.initSchema = () => {
   glob.sync(resolve(__dirname, "./schema", "**/*.js")).forEach(require);
 };
 // 创建管理员权限
-// exports.initAdmin = async () => {
-//   const User = mongoose.model("User");
-//   let user = await User.findOne({
-//     username: "Roger"
-//   });
-//   if (!user) {
-//     const user = new User({
-//       username: "Roger",
-//       email: "1092622350@qq.com",
-//       password: "1",
-//       role: "admin"
-//     });
-//     await user.save();
-//     console.log("管理员创建完毕");
-//   }
-// };
+exports.initAdmin = async () => {
+  const User = mongoose.model("User");
+  let user = await User.findOne({
+    nickname: "Roger"
+  });
+  if (!user) {
+    const user = new User({
+      nickname: "Roger",
+      email: "1092622350@qq.com",
+      password: "1",
+      role: "admin"
+    });
+    await user.save();
+    console.log("管理员创建完毕");
+  }
+};
 exports.connect = (dbUrl) => {
   let maxConnectTimes = 0;
   return new Promise((resolve, reject) => {
