@@ -42,7 +42,7 @@ ticketSchema.statics = {
         name: "ticket",
         ticket: data.ticket,
         expires_in: data.expires_in
-      })
+      });
     }
     await ticket.save();
     return data;

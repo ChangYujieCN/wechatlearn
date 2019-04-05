@@ -6,8 +6,8 @@ const parseXML = xml => {
     xml2js.parseString(xml, {trim: true}, (err, content) => {
       if (err) reject(err);
       else resolve(content);
-    })
-  })
+    });
+  });
 };
 
 // content = {
@@ -30,7 +30,7 @@ const formatMessage = result => {
       let item = result[keys[i]];
       let key = keys[i];
       if (!(item instanceof Array) || item.length === 0) {
-        continue
+        continue;
       }
       if (item.length === 1) {
         let val = item[0];
@@ -98,7 +98,7 @@ const sign = (ticket, url) => {
     noncestr,
     timestamp,
     signature,
-  }
+  };
 };
 module.exports.formatMessage = formatMessage;
 module.exports.parseXML = parseXML;

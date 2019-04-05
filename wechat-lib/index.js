@@ -197,7 +197,7 @@ class WeChat {
       options.url = options.url + "&media_id=" + mediaId;
     }
     return options;
-  };
+  }
 
   deleteMaterial(token, mediaId) {
     let form = {
@@ -208,7 +208,7 @@ class WeChat {
       method: "POST",
       url,
       body: form
-    }
+    };
   }
 
   updateMaterial(token, mediaId, news) {
@@ -221,7 +221,7 @@ class WeChat {
       method: "POST",
       url,
       body: form
-    }
+    };
   }
 
   countMaterial(token) {
@@ -229,7 +229,7 @@ class WeChat {
     return {
       method: "POST",
       url,
-    }
+    };
   }
 
   batchMaterial(token, options) {
@@ -241,7 +241,7 @@ class WeChat {
       method: "POST",
       url,
       body: options
-    }
+    };
   }
 
   createTag(token, name) {
@@ -379,7 +379,7 @@ class WeChat {
       method: "POST",
       url,
       body,
-    }
+    };
   }
 
   //创建二维码ticket
@@ -389,7 +389,7 @@ class WeChat {
       method: "POST",
       url,
       body: qr,
-    }
+    };
   }
 
   //通过ticket换取二维码
@@ -409,7 +409,7 @@ class WeChat {
       method: "POST",
       url,
       body,
-    }
+    };
   }
 
   semantic(token, semanticData) {
@@ -419,7 +419,7 @@ class WeChat {
       method: "POST",
       url,
       body: semanticData,
-    }
+    };
   }
 
   //AI接口
@@ -429,7 +429,7 @@ class WeChat {
       method: "POST",
       url,
       body: content,
-    }
+    };
   }
 
   createMenu(token, menu) {
@@ -438,14 +438,14 @@ class WeChat {
       method: "POST",
       url,
       body: menu,
-    }
+    };
   }
 
   deleteMenu(token) {
     let url = `${api.menu.del}access_token=${token}`;
     return {
       url,
-    }
+    };
   }
 
   //自定义菜单
@@ -463,7 +463,7 @@ class WeChat {
     let url = `${api.menu.fetch}access_token=${token}`;
     return {
       url,
-    }
+    };
   }
 }
 

@@ -46,7 +46,7 @@ tokenSchema.statics = {
         name: "access_token",
         token: data.access_token,
         expires_in: data.expires_in
-      })
+      });
     }
     await token.save();
     return data;

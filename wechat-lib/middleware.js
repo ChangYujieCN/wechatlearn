@@ -67,5 +67,5 @@ module.exports = (config, reply) => {
       //               <Content><![CDATA[${message.Content}]]></Content>
       //             </xml>`
     }
-  }
+  };
 };

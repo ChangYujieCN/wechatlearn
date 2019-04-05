@@ -51,7 +51,7 @@ exports.connect = (dbUrl) => {
     });
     mongoose.connection.once("open", () => {
       resolve();
-      console.log("database connected successfully...")
+      console.log("database connected successfully...");
     });
-  })
+  });
 };
