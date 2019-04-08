@@ -24,6 +24,7 @@ exports.new = async (ctx, next) => {
   const { name, _id } = ctx.request.body.category;
   let category;
 
+
   if (_id) {
     category = await api.movie.findCategoryById(_id);
   }

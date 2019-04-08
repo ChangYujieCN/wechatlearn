@@ -21,6 +21,7 @@
     "koa-router": "^7.4.0",
     "koa-session": "^5.10.1",
     "koa-views": "^6.2.0",
+    "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "mongoose": "^5.4.17",
     "pug": "^2.0.3",
