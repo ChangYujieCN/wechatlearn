@@ -1,6 +1,7 @@
 const {resolve} = require("path");
 const commonMenu = require("./menu");
 const config = require("../config");
+const api = require("../app/api");
 const help = "亲爱的，欢迎关注时光的余热\n" +
   "回复 1-2，测试文字回复\n" +
   "回复 3，测试图片回复\n" +
@@ -496,9 +497,39 @@ exports.reply = async (ctx, next) => {
         }];
         break;
       }
-      default:
-        reply = "听不太懂(⊙o⊙)？";
+      default: {
+        let movies = await api.movie.searchByKeyword(content);
+        reply = [];
+
+        if (!movies || movies.length === 0) {
+          let catData = await api.movie.findMoviesByCat(content);
+
+          if (catData) {
+            movies = catData.movies;
+          }
+        }
+
+        if (!movies || movies.length === 0) {
+          movies = await api.movie.searchByDouban(content);
+        }
+
+        if (!movies || movies.length) {
+          movies = movies.slice(0, 4);
+
+          movies.forEach(movie => {
+            reply.push({
+              title: movie.title,
+              description: movie.summary,
+              picUrl: movie.poster.indexOf("http") > -1 ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+              url: config.baseUrl + "/movie/" + movie._id
+            });
+          });
+        } else {
+          reply = "没有查询到与 " + content + " 相关的电影，要不要换一个名字试试看哦！";
+        }
         break;
+      }
+
     }
     ctx.body = reply;
   }
@@ -512,11 +543,69 @@ exports.reply = async (ctx, next) => {
       case "LOCATION":
         reply = `您上报的位置是:${message.Latitude}-${message.Longitude}-${message.Precision};`;
         break;
-      case "CLICK":
-        if (message.EventKey === "help") {
-          reply = help;
+      case "CLICK": {
+        switch (message.EventKey) {
+          case "help": {
+            reply = help;
+            break;
+          }
+          case "movie_hot": {
+            let movies = await api.movie.findHotMovies(-1, 4);
+            reply = [];
+            movies.forEach(movie => {
+              reply.push({
+                title: movie.title,
+                description: movie.summary,
+                picUrl: movie.poster.includes("http") ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+                url: config.baseUrl + "/movie/" + movie._id,
+              });
+            });
+            break;
+          }
+          case "movie_cold": {
+            let movies = await api.movie.findHotMovies(1, 4);
+            reply = [];
+            movies.forEach(movie => {
+              reply.push({
+                title: movie.title,
+                description: movie.summary,
+                picUrl: movie.poster.includes("http") ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+                url: config.baseUrl + "/movie/" + movie._id,
+              });
+            });
+            break;
+          }
+          case "movie_sci": {
+            let movies = await api.movie.findMoviesByCat("科幻") || [];
+            reply = [];
+            movies.forEach(movie => {
+              reply.push({
+                title: movie.title,
+                description: movie.summary,
+                picUrl: movie.poster.includes("http") ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+                url: config.baseUrl + "/movie/" + movie._id,
+              });
+            });
+            break;
+          }
+          case "movie_love": {
+            let movies = await api.movie.findMoviesByCat("爱情") || [];
+            reply = [];
+            movies.forEach(movie => {
+              reply.push({
+                title: movie.title,
+                description: movie.summary,
+                picUrl: movie.poster.includes("http") ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+                url: config.baseUrl + "/movie/" + movie._id,
+              });
+            });
+            break;
+          }
+          default:
+            break;
         }
-        reply = `你点击了菜单的: ${message.EventKey}`;
+      }
+        console.log(`你点击了菜单的: ${message.EventKey}`);
         break;
       case "VIEW":
         reply = `你点击了菜单链接 ${message.EventKey} ${message.MenuId}`;
