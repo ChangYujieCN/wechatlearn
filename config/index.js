@@ -6,5 +6,6 @@ module.exports = {
     token: "tokenisjustatokenhehe"
   },
   dbUrl: "mongodb://localhost:27017/wechat",
-  baseUrl:"http://learnwechatcyj.vipgz1.idcfengye.com"
+  // baseUrl:"http://learnwechatcyj.vipgz1.idcfengye.com"
+  baseUrl:"http://learnwechatcyj.free.idcfengye.com"
 };

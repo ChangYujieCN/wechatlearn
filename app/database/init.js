@@ -1,57 +1,45 @@
 const mongoose = require("mongoose");
-const {resolve} = require("path");
+const { resolve } = require("path");
+const glob = require("glob");
+
 mongoose.Promise = global.Promise;
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
-const glob = require("glob");
-exports.initSchema = () => {
+exports.initSchemas = () => {
   glob.sync(resolve(__dirname, "./schema", "**/*.js")).forEach(require);
 };
-// 创建管理员权限
-exports.initAdmin = async () => {
-  const User = mongoose.model("User");
-  let user = await User.findOne({
-    nickname: "Roger"
-  });
-  if (!user) {
-    const user = new User({
-      nickname: "Roger",
-      email: "1092622350@qq.com",
-      password: "1",
-      role: "admin"
-    });
-    await user.save();
-    console.log("管理员创建完毕");
-  }
-};
-exports.connect = (dbUrl) => {
+
+exports.connect = (db) => {
   let maxConnectTimes = 0;
-  return new Promise((resolve, reject) => {
+
+  return new Promise(resolve => {
     if (process.env.NODE_ENV !== "production") {
       mongoose.set("debug", true);
     }
-    mongoose.connect(dbUrl);
-    mongoose.connection.on("disconnected", () => {
+    mongoose.connect(db);
+    mongoose.connection.on("disconnect", () => {
       maxConnectTimes++;
+
       if (maxConnectTimes < 5) {
-        mongoose.connect(dbUrl);
+        mongoose.connect(db);
       } else {
-        reject(err);
-        throw new Error("数据库挂了");
+        throw new Error("数据库挂了吧少年");
       }
     });
     mongoose.connection.on("error", err => {
       maxConnectTimes++;
+      console.log(err);
+
       if (maxConnectTimes < 5) {
-        mongoose.connect(dbUrl);
+        mongoose.connect(db);
       } else {
-        throw new Error("数据库挂了");
+        throw new Error("数据库挂了吧少年");
       }
     });
-    mongoose.connection.once("open", () => {
+    mongoose.connection.on("open", () => {
       resolve();
-      console.log("database connected successfully...");
+      console.log("Mongodb connected!");
     });
   });
 };
