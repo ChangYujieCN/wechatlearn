@@ -1,4 +1,8 @@
-module.exports = {
+const {resolve} = require("path");
+const config = require(resolve(__dirname, "../../../../config/config.json"));
+const isProd = process.NODE_ENV === "production";
+
+let cfg = {
   port: 9999,
   wechat: {
     appID: "wx77ed97e5c04d0a78",
@@ -7,5 +11,11 @@ module.exports = {
   },
   dbUrl: "mongodb://localhost:27017/wechat",
   // baseUrl:"http://learnwechatcyj.vipgz1.idcfengye.com"
-  baseUrl:"http://learnwechatcyj.free.idcfengye.com"
+  baseUrl: "http://learnwechatcyj.free.idcfengye.com"
 };
+
+if (isProd) {
+  cfg = {...cfg, ...config};
+}
+
+module.exports = cfg;

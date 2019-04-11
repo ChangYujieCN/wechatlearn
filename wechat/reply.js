@@ -22,6 +22,25 @@ exports.reply = async (ctx, next) => {
     let content = message.Content;
     let reply = `你刚说的:"${content}",太复杂了,我暂时还听不懂`;
     switch (content.trim()) {
+      case "imooc": {
+        let countData = await api.wechat.saveMPUser(message, "imooc");
+        console.log(countData);
+        let user = countData.user;
+        let count = countData.count;
+        let nickname = countData.nickname;
+        if (user.gender === "1") {
+          nickname = `小鲜肉 - ${nickname}`;
+        } else {
+          nickname = `小姐姐 - ${nickname}`;
+        }
+        let guess = "我猜不出你来自哪里, ";
+        if (user.province || user.city) {
+          guess = `我猜你来自${user.province}省,${user.city}市`;
+        }
+        let end = `${guess} 哈哈`;
+        reply = `nickname:${nickname},你有${count}个小伙伴`;
+        break;
+      }
       case "1":
         reply = "1..";
         break;
@@ -535,7 +554,42 @@ exports.reply = async (ctx, next) => {
   }
   //middleware里流程并未走完  需要next()
   //测试定位功能 注意只有公众号可用
-  else if (message.MsgType === "event") {
+  if (message.MsgType === "voice") {
+    console.log(JSON.stringify(message));
+    let content = message.Recognition;
+    let reply = "";
+    let movies = await api.movie.searchByKeyword(content);
+    reply = [];
+
+    if (!movies || movies.length === 0) {
+      let catData = await api.movie.findMoviesByCat(content);
+
+      if (catData) {
+        movies = catData.movies;
+      }
+    }
+
+    if (!movies || movies.length === 0) {
+      movies = await api.movie.searchByDouban(content);
+    }
+
+    if (!movies || movies.length) {
+      movies = movies.slice(0, 4);
+
+      movies.forEach(movie => {
+        reply.push({
+          title: movie.title,
+          description: movie.summary,
+          picUrl: movie.poster.indexOf("http") > -1 ? movie.poster : (config.baseUrl + "/upload/" + movie.poster),
+          url: config.baseUrl + "/movie/" + movie._id
+        });
+      });
+    } else {
+      reply = "没有查询到与 " + content + " 相关的电影，要不要换一个名字试试看哦！";
+    }
+
+    ctx.body = reply;
+  } else if (message.MsgType === "event") {
     let reply = "";
     switch (message.Event) {
       //有部分消息会收不到

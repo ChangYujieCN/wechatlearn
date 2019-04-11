@@ -39,14 +39,14 @@ exports.saveWechatUser = async (userData) => {
 
   if (!user) {
     user = new User({
-      openid: [userData.openid],
-      unionid: userData.unionid,
+      openId: [userData.openid],
+      unionId: userData.unionid,
       nickname: userData.nickname,
       email: (userData.unionid || userData.openid) + "@wx.com",
       province: userData.province,
       country: userData.country,
       city: userData.city,
-      gender: userData.gender || userData.sex
+      gender: userData.gender || userData.sex,
     });
 
     console.log(user);
@@ -69,13 +69,13 @@ exports.saveMPUser = async (message, from = "") => {
   }
 
   let user = await User.findOne({
-    openid: openid
+    openId:openid
   });
 
   let mp = require("../../wechat/index");
   let client = mp.getWechat();
   let userInfo = await client.handle("getUserInfo", openid);
-
+  console.log(userInfo);
   if (sceneId === "imooc") {
     from = "imooc";
   }
@@ -83,8 +83,8 @@ exports.saveMPUser = async (message, from = "") => {
   if (!user) {
     let userData = {
       from: from,
-      openid: [userInfo.openid],
-      unionid: userInfo.unionid,
+      openId: [userInfo.openid],
+      unionId: userInfo.unionid||"",
       nickname: userInfo.nickname,
       email: (userInfo.unionid || userInfo.openid) + "@wx.com",
       province: userInfo.province,
@@ -137,3 +137,4 @@ exports.saveMPUser = async (message, from = "") => {
     count
   };
 };
+

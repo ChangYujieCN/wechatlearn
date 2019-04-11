@@ -1,0 +1,23 @@
+apps:
+  - script: app.js
+    name: Wechat7Day
+    env:
+      COMMON_VARIBLE: true
+    env_production:
+      NODE_ENV: production
+deploy:
+  production:
+    user: imooc_manager
+    host:
+      - 120.26.235.4
+    port: "39999"
+    ref:origin/master
+    repo: git@github.com:ChangYujieCN/wechatlearn.git
+    path: /www/wechat7day/production
+    ssh_option: StrictHostKeyChecking=no
+    pre-deploy: git fetch -all
+    post-deploy: "npm i && pm2 startOrRestart ecosystem.yaml --env production"
+    env:
+      NODE_ENV: production
+  git checkout master -b end && git add . && git commit -m "添加pm2 yaml
+  " && git push origin end && git checkout master && git merge origin/end && git push origin master
